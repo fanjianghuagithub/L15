@@ -1,0 +1,16 @@
+---- app_anc_switch_turnled Matches (15 in 1 files) ----
+App_anc.c (apps\anc\src):void app_anc_switch_turnled(bool on);
+App_anc.c (apps\anc\src):void app_anc_switch_turnled(bool on)
+App_anc.c (apps\anc\src):        app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):        app_anc_switch_turnled(false);
+App_anc.c (apps\anc\src):        app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):            app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):            app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):            app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):            app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):            app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):            app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):            app_anc_switch_turnled(false);
+App_anc.c (apps\anc\src):    app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):        app_anc_switch_turnled(true);
+App_anc.c (apps\anc\src):        app_anc_switch_turnled(false);
