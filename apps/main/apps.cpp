@@ -1821,6 +1821,18 @@ static void app_tell_battery_info_handler(uint8_t *batteryValueCount,
     }
 }
 #endif
+
+void power_in_iouint(void)
+{
+    #ifdef __FJH_AMP_SW__
+    if (fjh_amp_sw.pin != HAL_IOMUX_PIN_NUM){
+        hal_iomux_init((struct HAL_IOMUX_PIN_FUNCTION_MAP *)&fjh_amp_sw, 1);
+        hal_gpio_pin_set_dir((enum HAL_GPIO_PIN_T)fjh_amp_sw.pin, HAL_GPIO_DIR_OUT, 1);
+		osDelay(300);
+    }
+    #endif 
+}
+
 extern uint32_t __coredump_section_start[];
 extern uint32_t __ota_upgrade_log_start[];
 extern uint32_t __log_dump_start[];
@@ -1910,6 +1922,7 @@ extern int rpc_service_setup(void);
 
     if (hal_sw_bootmode_get() & HAL_SW_BOOTMODE_REBOOT){
         hal_sw_bootmode_clear(HAL_SW_BOOTMODE_REBOOT);
+		power_in_iouint();
         pwron_case = APP_POWERON_CASE_REBOOT;
         need_check_key = false;
         TRACE(0,"Initiative REBOOT happens!!!");
@@ -1925,6 +1938,7 @@ extern int rpc_service_setup(void);
 
     if (hal_sw_bootmode_get() & HAL_SW_BOOTMODE_TEST_MODE){
         hal_sw_bootmode_clear(HAL_SW_BOOTMODE_TEST_MODE);
+		power_in_iouint();
         pwron_case = APP_POWERON_CASE_TEST;
         need_check_key = false;
         TRACE(0,"To enter test mode!!!");
@@ -2240,7 +2254,7 @@ extern int rpc_service_setup(void);
 	}
 	else
 	{
-		
+		power_in_iouint();
         app_status_indication_set(APP_STATUS_INDICATION_POWERON);
 #ifdef MEDIA_PLAYER_SUPPORT
         app_voice_report(APP_STATUS_INDICATION_POWERON, 0);

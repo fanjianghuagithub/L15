@@ -141,12 +141,7 @@ int tgt_hardware_setup(void)
         hal_gpio_pin_set_dir((enum HAL_GPIO_PIN_T)app_battery_ext_charger_indicator_cfg.pin, HAL_GPIO_DIR_IN, 1);
     }
 
-#ifdef __FJH_AMP_SW__
-    if (fjh_amp_sw.pin != HAL_IOMUX_PIN_NUM){
-        hal_iomux_init((struct HAL_IOMUX_PIN_FUNCTION_MAP *)&fjh_amp_sw, 1);
-        hal_gpio_pin_set_dir((enum HAL_GPIO_PIN_T)fjh_amp_sw.pin, HAL_GPIO_DIR_OUT, 1);
-    }
-#endif 
+
 
         hal_iomux_init((struct HAL_IOMUX_PIN_FUNCTION_MAP *)&fjh_px318_ld0, 1);
         hal_gpio_pin_set_dir((enum HAL_GPIO_PIN_T)fjh_px318_ld0.pin, HAL_GPIO_DIR_OUT, 0);
