@@ -159,8 +159,8 @@ openning reconnect time      = (RECONNECT_RETRY_INTERVAL_MS+PAGETO)*OPENNING_REC
                              = 16s
 ======================================================================================================*/
 #define APP_BT_PROFILE_RECONNECT_RETRY_INTERVAL_MS (3000)
-#define APP_BT_PROFILE_OPENNING_RECONNECT_RETRY_LIMIT_CNT   (1)
-#define APP_BT_PROFILE_RECONNECT_RETRY_LIMIT_CNT (30)
+#define APP_BT_PROFILE_OPENNING_RECONNECT_RETRY_LIMIT_CNT   (0)
+#define APP_BT_PROFILE_RECONNECT_RETRY_LIMIT_CNT (60)
 #define APP_BT_PROFILE_CONNECT_RETRY_MS (10000)
 
 static struct app_bt_profile_manager bt_profile_manager[BT_DEVICE_NUM];
@@ -719,7 +719,7 @@ void app_bt_accessible_manager_process(const btif_event_t *Event)
         case BTIF_BTEVENT_ENCRYPTION_CHANGE:
             TRACE(1,"BTIF_BTEVENT_ENCRYPTION_CHANGE activeCons:%d",btif_me_get_activeCons());
 #if defined(__BTIF_EARPHONE__)   && !defined(FPGA)
-            app_stop_10_second_timer(APP_PAIR_TIMER_ID);
+            app_stop_10_second_timer(APP_POWEROFF_TIMER_ID);
 #endif
 #ifdef __BT_ONE_BRING_TWO__
              if(btif_me_get_activeCons() == 0){
@@ -760,7 +760,7 @@ void app_bt_accessible_manager_process(const btif_event_t *Event)
                 app_bt_accessmode_set_req(BTIF_BAM_NOT_ACCESSIBLE);
             }
 #else
-		if(linein_mode_flg == FALSE)//chenzhao
+		if(linein_mode_flg == FALSE)
             app_bt_accessmode_set_req(BTIF_BT_DEFAULT_ACCESS_MODE_PAIR);
 #endif
 #else
@@ -1580,10 +1580,14 @@ void app_bt_global_handle(const btif_event_t *Event)
             if (btif_me_get_activeCons() == 0){
                      app_start_10_second_timer(APP_POWEROFF_TIMER_ID);
 					 TRACE(4,"bt_profile_manager[BT_DEVICE_ID_1].reconnect_mode = %d",bt_profile_manager[BT_DEVICE_ID_1].reconnect_mode);
-                    if(( bt_profile_manager[BT_DEVICE_ID_1].reconnect_mode != bt_profile_reconnect_reconnecting)&( bt_profile_manager[BT_DEVICE_ID_1].reconnect_mode != bt_profile_reconnect_openreconnecting))					
+                    if(( bt_profile_manager[BT_DEVICE_ID_1].reconnect_mode != bt_profile_reconnect_reconnecting))		//&( bt_profile_manager[BT_DEVICE_ID_1].reconnect_mode != bt_profile_reconnect_openreconnecting)			
 					{
 					       if(linein_mode_flg==false)
-						   app_bt_accessmode_set_req(BTIF_BT_DEFAULT_ACCESS_MODE_PAIR);
+						   {
+						      TRACE(1,"CONNECT_IND/CNF activeCons:%d so disconnect it", btif_me_get_activeCons());
+                              app_bt_MeDisconnectLink(btif_me_get_callback_event_rem_dev( Event));
+						      app_bt_accessmode_set_req(BTIF_BT_DEFAULT_ACCESS_MODE_PAIR);
+						   }
 					}
 				
             }else{
@@ -1888,7 +1892,7 @@ static int app_bt_handle_process(APP_MESSAGE_BODY *msg_body)
 #if 1
                 app_voice_report(APP_STATUS_INDICATION_BOTHSCAN, 0);
 #endif
-                app_start_10_second_timer(APP_PAIR_TIMER_ID);
+                app_start_10_second_timer(APP_POWEROFF_TIMER_ID);
 #endif
             }else{
 #ifndef FPGA

@@ -493,6 +493,9 @@ int app_battery_handle_process_charging(uint32_t status,  union APP_BATTERY_MSG_
             app_voice_report(APP_STATUS_INDICATION_FULLCHARGE, 0);
 #endif
 #endif
+            TRACE(0,"CHARGING-->FULL-->POWEROFF");
+            osTimerStop(app_battery_timer);
+            app_shutdown();
         }
     }
 
